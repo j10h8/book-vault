@@ -1,0 +1,33 @@
+﻿@page "/"
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+@inject IConfiguration Config
+@inject IUserService UserService
+@inject NavigationManager NavigationManager
+@inject ProtectedSessionStorage SessionStorage
+
+<PageTitle>Start page</PageTitle>
+
+<div class="centered" style="margin-top: 15vh">
+	<h1>Welcome to BookVault!</h1>
+
+	<EditForm Model="LogInModel" OnValidSubmit="HandleUnlockVaultAsync" style="margin-top:2rem">
+		<InputText @bind-Value="LogInModel.UserName" placeholder="User name" maxlength="12"></InputText>
+		<InputText @bind-Value="LogInModel.Password" placeholder="Password" type="password" maxlength="12"></InputText>
+		<button type="submit" class="button" style="width:10rem">Unlock existing vault</button>
+	</EditForm>
+
+	<h3>or</h3>
+
+	<EditForm Model="CreateVaultModel" style="margin-top:0rem">
+		<DataAnnotationsValidator />
+		<ValidationSummary />
+		<InputText @bind-Value="CreateVaultModel.UserName" placeholder="User name" minlength="2" maxlength="12"></InputText>
+		<InputText @bind-Value="CreateVaultModel.Password" placeholder="Password" type="password" minlength="8" maxlength="12"></InputText>
+		<button class="button" style="width:10rem" @onclick="HandleCreateVaultAsync">Create new vault</button>
+	</EditForm>
+</div>
+
+@if (messageModalIsVisible)
+{
+	<MessageModal Message="@_message" OnClose="ToggleMessageModal" />
+}

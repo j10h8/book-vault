@@ -1,0 +1,30 @@
+﻿@page "/about"
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+@inject NavigationManager navigationManager
+@inject ProtectedSessionStorage SessionStorage
+
+<div class="centered">
+	<h1 style="margin-top:5rem;">About BookVault</h1>
+	<div style="display: flex; flex-direction: column; width: 25%;">
+		<p>BookVault is a showcase/portfolio demo project, and is intended to be used for demonstration purposes only.</p>
+		<p>The application is built as a Blazor Server project that integrates with a SQL database, and demonstrates comprehensive CRUD operations and sophisticated sort/filtering functionality.</p>
+		<p>Dependency Injection and Repository Pattern is used, ensuring loose coupling and modularity, as well as abstraction over all database operations.</p>
+		<p>By using BookVault, you acknowledge and accept the <a style="text-decoration: underline; cursor: pointer;" @onclick="NavigateToTermsAndConditionsPage">Terms & Conditions</a>.</p>
+		<p>The <a style="color: goldenrod;" href="https://github.com/j10h8/book-vault">source code</a> is held publicly available at GitHub.</p>
+	</div>
+	<button style="margin-top:2rem;" @onclick="NavigateToIndexPage" class="button">
+		Go to start page
+	</button>
+</div>
+
+@code {
+	private void NavigateToIndexPage()
+	{
+		navigationManager.NavigateTo("/");
+	}
+
+	private void NavigateToTermsAndConditionsPage()
+	{
+		navigationManager.NavigateTo($"termsandconditions");
+	}
+}

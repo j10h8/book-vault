@@ -1,0 +1,23 @@
+﻿<div class="my-modal">
+	<h3>Are you sure that you want to delete your vault and all of its content?</h3>
+	<button style="margin-top:1rem; border: 2px solid green; color:green;" class="button" @onclick="Close">No, do not delete my vault!</button>
+	<button style="margin-top:1rem; border: 2px solid red; color: red;" class="button" @onclick="DeleteVaultAsync">Yes, delete my vault and all of its content!</button>
+
+</div>
+
+@code {
+	[Parameter]
+	public Action? OnClose { get; set; }
+	[Parameter]
+	public Action? OnDeleteVaultAsync { get; set; }
+
+	private void Close()
+	{
+		OnClose?.Invoke();
+	}
+
+	private void DeleteVaultAsync()
+	{
+		OnDeleteVaultAsync?.Invoke();
+	}
+}

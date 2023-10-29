@@ -1,0 +1,56 @@
+﻿@using book_vault.Models;
+@using static book_vault.Shared.Book;
+@inject IBookService BookService;
+
+<div class="my-modal">
+	@if (BookToUpdate != null)
+	{
+		<h3>Here you can update the author and title info of the book!</h3>
+
+		<EditForm Model="UpdateBookModel" OnValidSubmit="HandleSubmitAsync" style="display:flex; flex-direction:column; width:50%; align-items:center;">
+			<DataAnnotationsValidator />
+			<ValidationSummary />
+			<label style="margin-top:1rem;" for="title">Title</label>
+			<InputText style="width:50%" @bind-Value="UpdateBookModel.UpdateTitle" maxlength="20"></InputText>
+			<label style="margin-top:1rem;" for="author">Author</label>
+			<InputText style="width:50%" @bind-Value="UpdateBookModel.UpdateAuthor" maxlength="20"></InputText>
+			<button style="width:277px; margin-top:1rem; color:red; border-color:red;" type="submit" class="button">Update!</button>
+		</EditForm>
+
+		<button style="width:277px; margin-top:1rem; color:green; border-color:green;" class="button" @onclick="Close">I don't want to update the book info. Close!</button>
+	}
+</div>
+
+@code {
+	[Parameter]
+	public BookModel? BookToUpdate { get; set; }
+	[Parameter]
+	public Action? OnClose { get; set; }
+	private UpdateBookModel UpdateBookModel { get; set; } = new();
+
+	protected override void OnInitialized()
+	{
+		if (BookToUpdate != null)
+		{
+			UpdateBookModel.UpdateTitle = BookToUpdate.Title;
+			UpdateBookModel.UpdateAuthor = BookToUpdate.Author;
+		}
+	}
+
+	private async Task HandleSubmitAsync()
+	{
+		if (BookToUpdate != null)
+		{
+			await BookService.UpdateBookAsync(BookToUpdate, UpdateBookModel);
+
+			BookToUpdate = null!;
+		}
+
+		Close();
+	}
+
+	private void Close()
+	{
+		OnClose?.Invoke();
+	}
+}

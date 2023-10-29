@@ -1,0 +1,101 @@
+﻿@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+@using book_vault.Services
+@inject NavigationManager NavigationManager
+@inject IUserService userService
+@inject ProtectedSessionStorage SessionStorage
+
+<div class="nav-b">
+	<div style="display:flex; align-items: center;">
+		<div style="display: flex; align-items: center;">
+			<div style="display: flex; align-items: baseline;">
+				<h2 style="padding-left: 0.5rem; margin: 0; padding-top: 0; cursor: pointer;" @onclick="NavigateToIndexPage">BookVault</h2>
+				<h3 style="padding-left: 4rem; margin: 0; padding-top: 0; cursor: pointer; font-weight:300;" @onclick="NavigateToTermsAndConditionsPage">Terms & Conditions</h3>
+				<h3 style="padding-left: 4rem; margin: 0; padding-top: 0; cursor: pointer; font-weight:300;" @onclick="NavigateToAboutPageAsync">About</h3>
+			</div>
+		</div>
+	</div>
+	<div class="nav-b-content">
+		@if (UserName != null)
+		{
+			<h3 @onclick="NavigateToUserPage" style="cursor:pointer">@UserName</h3>
+			<button class="button" @onclick="LogOutAsync">
+				Lock vault
+			</button>
+			<button class="button" @onclick="ToggleConfirmDeleteModal">
+				Delete vault
+			</button>
+		}
+	</div>
+</div>
+
+@if (confirmDeleteModalIsVisible)
+{
+	<ConfirmDeleteModal OnClose="ToggleConfirmDeleteModal" OnDeleteVaultAsync="async () => await DeleteVaultAsync()" />
+}
+
+@code {
+	[Parameter]
+	public string? UserName { get; set; } = null;
+	private bool confirmDeleteModalIsVisible = false;
+
+	protected override async Task OnInitializedAsync()
+	{
+		var result = await SessionStorage.GetAsync<string>("UserName");
+
+		if (result.Success)
+		{
+			UserName = result.Value;
+		}
+	}
+
+	private void NavigateToIndexPage()
+	{
+		NavigationManager.NavigateTo("/");
+	}
+
+	private void NavigateToUserPage()
+	{
+		NavigationManager.NavigateTo($"userpage/{UserName}");
+	}
+
+	private void NavigateToAboutPageAsync()
+	{
+		NavigationManager.NavigateTo($"about");
+	}
+
+	private void NavigateToTermsAndConditionsPage()
+	{
+		NavigationManager.NavigateTo($"termsandconditions");
+	}
+
+	private async Task LogOutAsync()
+	{
+		await SessionStorage.DeleteAsync("LoggedInUserId");
+		await SessionStorage.DeleteAsync("UserName");
+		UserName = null;
+
+		NavigateToIndexPage();
+	}
+
+	private void ToggleConfirmDeleteModal()
+	{
+		confirmDeleteModalIsVisible = !confirmDeleteModalIsVisible;
+
+		StateHasChanged();
+	}
+
+	private async Task DeleteVaultAsync()
+	{
+		if (UserName != null)
+		{
+			await userService.DeleteVaultAsync(UserName);
+			await SessionStorage.DeleteAsync("LoggedInUserId");
+			await SessionStorage.DeleteAsync("UserName");
+			UserName = null;
+
+			NavigateToIndexPage();
+
+			ToggleConfirmDeleteModal();
+		}
+	}
+}

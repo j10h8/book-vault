@@ -1,0 +1,55 @@
+﻿@page "/termsandconditions"
+@inject NavigationManager navigationManager
+
+<div class="centered">
+	<h1 style="margin-top:5rem;">Terms & Conditions</h1>
+	<div style="display: flex; flex-direction: column; width: 30%;">
+		<p>BookVault is a showcase/portfolio demo project, and is intended to be used for demonstration purposes only. <br /><br />By using BookVault, you agree to the following terms and conditions:</p>
+		<ol>
+			<li>
+				<strong>Account Creation:</strong>
+				<ul>
+					<li>You may create an account (a "vault") with a username and password.</li>
+					<li>Please do not provide sensitive or personal information during registration and when saving information in your vault.</li>
+				</ul>
+			</li>
+			<li>
+				<strong>Password Restoration:</strong>
+				<ul>
+					<li>Password restoration services are not available. Please keep your password secure.</li>
+				</ul>
+			</li>
+			<li>
+				<strong>Account and Content Deletion:</strong>
+				<ul>
+					<li>All user accounts and associated data in the database are deleted at least every three months.</li>
+					<li>User accounts and associated data may however be deleted at any time, without prior notice.</li>
+					<li>When logged in, users have the option to delete their account and all associated data, at any time.</li>
+				</ul>
+			</li>
+			<li>
+				<strong>App Usage:</strong>
+				<ul>
+					<li>BookVault or its services may be removed at any time, without prior notice.</li>
+				</ul>
+			</li>
+			<li>
+				<strong>Changes to Terms & Conditions:</strong>
+				<ul>
+					<li>These terms and conditions may be updated at any time.</li>
+				</ul>
+			</li>
+		</ol>
+		<p>By using BookVault, you acknowledge and accept these terms and conditions.</p>
+	</div>
+	<button style="margin-top:2rem;" @onclick="NavigateToIndexPage" class="button">
+		Go to start page
+	</button>
+</div>
+
+@code {
+	private void NavigateToIndexPage()
+	{
+		navigationManager.NavigateTo("/");
+	}
+}

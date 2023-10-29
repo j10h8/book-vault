@@ -1,0 +1,27 @@
+﻿@using book_vault.Models;
+
+<div class="my-modal">
+	<h3>Are you sure you want to remove @BookToRemove.Title?</h3>
+
+	<button style="border: 2px solid red; color:red;" class="button" @onclick="OnRemoveBook">Yes, remove the book!</button>
+	<button style="margin-top:1rem; border: 2px solid green; color:green;"  class="button" @onclick="Close">No, do not remove the book!</button>
+</div>
+
+@code {
+	[Parameter]
+	public BookModel BookToRemove { get; set; } = null!;
+	[Parameter]
+	public Action? OnClose { get; set; }
+	[Parameter]
+	public Action? OnRemoveBookAsync { get; set; }
+
+	private void OnRemoveBook()
+	{
+		OnRemoveBookAsync?.Invoke();
+	}
+
+	private void Close()
+	{
+		OnClose?.Invoke();
+	}
+}

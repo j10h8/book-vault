@@ -1,0 +1,75 @@
+﻿@page "/userpage/{UserName}"
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+@inject IConfiguration Config
+@inject IUserService UserService
+@inject IBookService BookService
+@inject NavigationManager navigationManager
+@inject ProtectedSessionStorage SessionStorage
+
+<script>
+	document.addEventListener("click", function (event) {
+		if (event.target !== document.getElementById("filter-input")) {
+
+			document.getElementById("filter-input").value = "";
+		}
+	});
+</script>
+
+@if (_loggedInUser != null && UserName == _loggedInUser.UserName)
+{
+	<div style="display:flex;flex-direction:column;justify-content:center;">
+		<div style="display:flex;justify-content:center;margin-top:6rem;">
+			<h2>Greetings @_loggedInUser.UserName! This is your BookVault!</h2>
+		</div>
+		<div style="display:flex;justify-content:center;margin-top:3rem;">
+			<div style="margin-left:6rem; margin-right:6rem; width:25rem;">
+				<div>
+					@if (_loggedInUser.Books != null && _loggedInUser.Books.Count() > 0)
+					{
+						<h2 style="margin:0 0 0.5rem 0; text-align:center;">Books you have read!</h2>
+						<div style="display:flex; justify-content:space-between;">
+							<button style="margin-bottom:0.5rem; width:165px;" @onclick="ChangeOrderBy" class="button">Sort by @_sortButtonText</button>
+							<input id="filter-input" style="margin-bottom:0.5rem; width:208px;" class="button" type="text" maxlength="20" @oninput="@((ChangeEventArgs e) => FilterList(e.Value?.ToString()))" placeholder="Filter by typing" @onfocusout="@((FocusEventArgs f) => FilterList(""))" />
+						</div>
+						<div style="border:solid 2px; border-color:goldenrod; border-radius:5px; padding: 0 1rem 1rem 1rem;">
+							@foreach (var book in BooksList)
+							{
+								<Book BookModel="book" OnRemoveBookAsync=@(async () => await RemoveBookAsync(@book.Id)) OnCloseUpdateModal="ReRenderUserPage" />
+							}
+						</div>
+					}
+					else
+					{
+						<h2 style="margin:0">You haven't added any books yet!</h2>
+					}
+				</div>
+			</div>
+			<div style="margin-left:6rem;margin-right:6rem; width:25rem;">
+				<div style="display:flex; flex-direction:column; justify-items:center;">
+					<h2 style="margin:0 0 0.5rem 0;">Add a book you've read!</h2>
+
+					<EditForm Model="AddBookModel" OnValidSubmit="HandleSubmitAsync" style="margin-top:0rem">
+						<DataAnnotationsValidator />
+						<ValidationSummary />
+						<InputText @bind-Value="AddBookModel.Title" placeholder="Title" maxlength="20"></InputText>
+						<InputText @bind-Value="AddBookModel.Author" placeholder="Author" maxlength="20"></InputText>
+						<button style="margin-top:0.5rem;" type="submit" class="button">Add book</button>
+					</EditForm>
+				</div>
+			</div>
+		</div>
+	</div>
+}
+else
+{
+	<div class="centered" style="margin-top: 15vh">
+		<h2>
+			Go to the start page to unlock your vault!
+		</h2>
+		<button @onclick="NavigateToIndexPage" class="button">
+			Start page
+		</button>
+	</div>
+
+}
+
