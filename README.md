@@ -2,7 +2,7 @@
 
 **Overview**
 
-BookVault is a showcase/portfolio demo project, and is intended to be used for demonstration purposes only. The application is built as a Blazor Server project that integrates with a SQL database, and demonstrates comprehensive CRUD operations and sophisticated sort/filtering functionality. Dependency Injection and Repository Pattern is used, ensuring loose coupling and modularity, as well as abstraction over all database operations. The solution is deployed and readily accessible at [BookVault on Azure](https://blazor-deploy-1.azurewebsites.net/).
+BookVault is a showcase/portfolio demo project, and is intended to be used for demonstration purposes only. The application is built as a Blazor Server project that integrates with a SQL database, and demonstrates comprehensive CRUD operations and sophisticated sort/filtering functionality. Dependency Injection and Repository Pattern is used, ensuring loose coupling and modularity, as well as abstraction over all database operations. 
 
 **Local Deployment Instructions**
 
